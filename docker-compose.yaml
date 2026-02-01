@@ -16,7 +16,7 @@ services:
       - ./data/vault:/data
 
   immich_server:
-    image: ghcr.io/immich-app/immich-server:latest
+    image: ghcr.io/immich-app/immich-server:v2
     container_name: immich_server
     restart: always
     volumes:
