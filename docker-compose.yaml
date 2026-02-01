@@ -21,7 +21,7 @@ services:
     restart: always
     volumes:
       - ./data/photos:/usr/src/app/upload
-    env_file: .env
+    env_file: immich.example.env
 
   n8n:
     image: n8nio/n8n
