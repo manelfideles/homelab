@@ -89,6 +89,20 @@ services:
       - ./data/movies:/movies
       - ./data/downloads:/downloads
 
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - ./config/sonarr:/config
+      - ./data/tvshows:/tv
+      - ./data/downloads:/downloads
+    ports:
+      - 8989:8989
+
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
