@@ -3,7 +3,7 @@ services:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared_tunnel
     restart: unless-stopped
-    command: tunnel run --token YOUR_CLOUDFLARE_TUNNEL_TOKEN
+    command: tunnel run --token ${CLOUDFLARE_TUNNEL_TOKEN}
 
   vaultwarden:
     image: vaultwarden/server:latest
@@ -11,7 +11,7 @@ services:
     restart: unless-stopped
     environment:
       - SIGNUPS_ALLOWED=true
-      - DOMAIN=https://vault.yourdomain.xyz
+      - DOMAIN=https://vault.${CLOUDFLARE_DOMAIN}
     volumes:
       - ./data/vault:/data
 
@@ -28,9 +28,9 @@ services:
     container_name: n8n
     restart: unless-stopped
     environment:
-      - N8N_HOST=home.yourdomain.xyz
+      - N8N_HOST=home.${CLOUDFLARE_DOMAIN}
       - N8N_PROTOCOL=https
-      - WEBHOOK_URL=https://home.yourdomain.xyz/
+      - WEBHOOK_URL=https://home.${CLOUDFLARE_DOMAIN}/
     volumes:
       - ./config/n8n:/home/node/.n8n
 
