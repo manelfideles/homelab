@@ -68,6 +68,9 @@ services:
     image: lscr.io/linuxserver/bazarr:latest
     container_name: bazarr
     restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
     ports:
       - 6767:6767
     volumes:
