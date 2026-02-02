@@ -1,10 +1,4 @@
 services:
-  tunnel:
-    image: cloudflare/cloudflared:latest
-    container_name: cloudflared_tunnel
-    restart: unless-stopped
-    command: tunnel run --token ${CLOUDFLARE_TUNNEL_TOKEN}
-
   vaultwarden:
     image: vaultwarden/server:latest
     container_name: vaultwarden
@@ -15,24 +9,24 @@ services:
     volumes:
       - ./data/vault:/data
 
-  immich_server:
-    image: ghcr.io/immich-app/immich-server:v2
-    container_name: immich_server
-    restart: always
-    volumes:
-      - ./data/photos:/usr/src/app/upload
-    env_file: immich.example.env
+  # immich_server:
+  #   image: ghcr.io/immich-app/immich-server:v2
+  #   container_name: immich_server
+  #   restart: always
+  #   volumes:
+  #     - ./data/photos:/usr/src/app/upload
+  #   env_file: immich.example.env
 
-  n8n:
-    image: n8nio/n8n
-    container_name: n8n
-    restart: unless-stopped
-    environment:
-      - N8N_HOST=home.${CLOUDFLARE_DOMAIN}
-      - N8N_PROTOCOL=https
-      - WEBHOOK_URL=https://home.${CLOUDFLARE_DOMAIN}/
-    volumes:
-      - ./config/n8n:/home/node/.n8n
+  # n8n:
+  #   image: n8nio/n8n
+  #   container_name: n8n
+  #   restart: unless-stopped
+  #   environment:
+  #     - N8N_HOST=home.${CLOUDFLARE_DOMAIN}
+  #     - N8N_PROTOCOL=https
+  #     - WEBHOOK_URL=https://home.${CLOUDFLARE_DOMAIN}/
+  #   volumes:
+  #     - ./config/n8n:/home/node/.n8n
 
   unmanic:
     image: josh5/unmanic:latest
