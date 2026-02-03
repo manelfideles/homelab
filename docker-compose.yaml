@@ -109,6 +109,8 @@ services:
 networks:
   secure-pipe:
     driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1400
     ipam:
       config:
         - subnet: 192.168.90.0/24
