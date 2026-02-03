@@ -1,13 +1,13 @@
 services:
-  vaultwarden:
-    image: vaultwarden/server:latest
-    container_name: vaultwarden
-    restart: unless-stopped
-    environment:
-      - SIGNUPS_ALLOWED=true
-      - DOMAIN=https://vault.${CLOUDFLARE_DOMAIN}
-    volumes:
-      - ./data/vault:/data
+  # vaultwarden:
+  #   image: vaultwarden/server:latest
+  #   container_name: vaultwarden
+  #   restart: unless-stopped
+  #   environment:
+  #     - SIGNUPS_ALLOWED=true
+  #     - DOMAIN=https://vault.${CLOUDFLARE_DOMAIN}
+  #   volumes:
+  #     - ./data/vault:/data
 
   # immich_server:
   #   image: ghcr.io/immich-app/immich-server:v2
