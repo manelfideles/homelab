@@ -2,27 +2,26 @@ services:
   dns-resolver:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared_dns
-    restart: unless-stopped
-    # We fix the IP so we can point Prowlarr to it directly
     networks:
       secure-pipe:
-        ipv4_address: 172.20.0.53
+        ipv4_address: 192.168.90.53
     command: proxy-dns --address 0.0.0.0 --port 53 --upstream https://1.1.1.1/dns-query --upstream https://1.0.0.1/dns-query
+    restart: unless-stopped
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
     restart: unless-stopped
     dns:
-      - 172.20.0.53
+      - 192.168.90.53
     networks:
       - secure-pipe
-    depends_on:
-      - dns-resolver
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=1
     ports:
       - 9696:9696
+    depends_on:
+      - dns-resolver
     volumes:
       - ./config/prowlarr:/config
 
@@ -112,4 +111,4 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.20.0.0/24
+        - subnet: 192.168.90.0/24
