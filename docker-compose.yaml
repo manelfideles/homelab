@@ -3,35 +3,28 @@ services:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared_dns
     restart: unless-stopped
+    # We fix the IP so we can point Prowlarr to it directly
+    networks:
+      secure-pipe:
+        ipv4_address: 172.20.0.53
     command: proxy-dns --address 0.0.0.0 --port 53 --upstream https://1.1.1.1/dns-query --upstream https://1.0.0.1/dns-query
-  # vaultwarden:
-  #   image: vaultwarden/server:latest
-  #   container_name: vaultwarden
-  #   restart: unless-stopped
-  #   environment:
-  #     - SIGNUPS_ALLOWED=true
-  #     - DOMAIN=https://vault.${CLOUDFLARE_DOMAIN}
-  #   volumes:
-  #     - ./data/vault:/data
 
-  # immich_server:
-  #   image: ghcr.io/immich-app/immich-server:v2
-  #   container_name: immich_server
-  #   restart: always
-  #   volumes:
-  #     - ./data/photos:/usr/src/app/upload
-  #   env_file: immich.example.env
-
-  # n8n:
-  #   image: n8nio/n8n
-  #   container_name: n8n
-  #   restart: unless-stopped
-  #   environment:
-  #     - N8N_HOST=home.${CLOUDFLARE_DOMAIN}
-  #     - N8N_PROTOCOL=https
-  #     - WEBHOOK_URL=https://home.${CLOUDFLARE_DOMAIN}/
-  #   volumes:
-  #     - ./config/n8n:/home/node/.n8n
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    restart: unless-stopped
+    dns:
+      - 172.20.0.53
+    networks:
+      - secure-pipe
+    depends_on:
+      - dns-resolver
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=1
+    ports:
+      - 9696:9696
+    volumes:
+      - ./config/prowlarr:/config
 
   unmanic:
     image: josh5/unmanic:latest
@@ -102,21 +95,6 @@ services:
     ports:
       - 8989:8989
 
-  prowlarr:
-    image: lscr.io/linuxserver/prowlarr:latest
-    container_name: prowlarr
-    restart: unless-stopped
-    dns:
-      - 172.17.0.1 # This is the default Docker bridge gateway
-    depends_on:
-      - dns-resolver
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=1
-    ports:
-      - 9696:9696
-    volumes:
-      - ./config/prowlarr:/config
-
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
@@ -128,3 +106,10 @@ services:
     volumes:
       - ./config/qbittorrent:/config
       - ./data/downloads:/downloads
+
+networks:
+  secure-pipe:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
