@@ -1,2 +1,5 @@
 .env
 immich.env
+cache/
+config/
+data/

@@ -11,9 +11,10 @@ services:
       - VPN_TYPE=openvpn
       - OPENVPN_PROTOCOL=tcp
       - OPENVPN_ENDPOINT_PORT=443
-      - OPENVPN_USER=${OPENVPN_USER}
-      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
+      - OPENVPN_USER=
+      - OPENVPN_PASSWORD=
       - SERVER_COUNTRIES=Netherlands
+      - FREE_ONLY=yes
     ports:
       - 9696:9696
     restart: unless-stopped
@@ -27,93 +28,92 @@ services:
     volumes:
       - ./config/prowlarr:/config
     restart: unless-stopped
+#   unmanic:
+#     image: josh5/unmanic:latest
+#     container_name: unmanic
+#     restart: unless-stopped
+#     environment:
+#       - PUID=1000
+#       - PGID=1000
+#     devices:
+#       - /dev/dri:/dev/dri
+#     volumes:
+#       - ./config/unmanic:/config
+#       - ./data/movies:/library/movies
+#       - ./data/tvshows:/library/tvshows
+#       - ./cache/unmanic:/tmp/unmanic
+#     ports:
+#       - 8888:8888
 
-  unmanic:
-    image: josh5/unmanic:latest
-    container_name: unmanic
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-    devices:
-      - /dev/dri:/dev/dri
-    volumes:
-      - ./config/unmanic:/config
-      - ./data/movies:/library/movies
-      - ./data/tvshows:/library/tvshows
-      - ./cache/unmanic:/tmp/unmanic
-    ports:
-      - 8888:8888
+#   jellyfin:
+#     image: jellyfin/jellyfin
+#     container_name: jellyfin
+#     restart: unless-stopped
+#     devices:
+#       - /dev/dri:/dev/dri
+#     ports:
+#       - 8096:8096
+#     volumes:
+#       - ./config/jellyfin:/config
+#       - ./data/movies:/data/movies
+#       - ./data/tvshows:/data/tvshows
 
-  jellyfin:
-    image: jellyfin/jellyfin
-    container_name: jellyfin
-    restart: unless-stopped
-    devices:
-      - /dev/dri:/dev/dri
-    ports:
-      - 8096:8096
-    volumes:
-      - ./config/jellyfin:/config
-      - ./data/movies:/data/movies
-      - ./data/tvshows:/data/tvshows
+#   bazarr:
+#     image: lscr.io/linuxserver/bazarr:latest
+#     container_name: bazarr
+#     restart: unless-stopped
+#     ports:
+#       - 6767:6767
+#     volumes:
+#       - ./config/bazarr:/config
+#       - ./data/movies:/movies
+#       - ./data/tvshows:/tv
 
-  bazarr:
-    image: lscr.io/linuxserver/bazarr:latest
-    container_name: bazarr
-    restart: unless-stopped
-    ports:
-      - 6767:6767
-    volumes:
-      - ./config/bazarr:/config
-      - ./data/movies:/movies
-      - ./data/tvshows:/tv
+#   radarr:
+#     image: lscr.io/linuxserver/radarr:latest
+#     container_name: radarr
+#     restart: unless-stopped
+#     environment:
+#       - PUID=1000
+#       - PGID=1000
+#     ports:
+#       - 7878:7878
+#     volumes:
+#       - ./config/radarr:/config
+#       - ./data/movies:/movies
+#       - ./data/downloads:/downloads
 
-  radarr:
-    image: lscr.io/linuxserver/radarr:latest
-    container_name: radarr
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-    ports:
-      - 7878:7878
-    volumes:
-      - ./config/radarr:/config
-      - ./data/movies:/movies
-      - ./data/downloads:/downloads
+#   sonarr:
+#     image: lscr.io/linuxserver/sonarr:latest
+#     container_name: sonarr
+#     restart: unless-stopped
+#     environment:
+#       - PUID=1000
+#       - PGID=1000
+#     volumes:
+#       - ./config/sonarr:/config
+#       - ./data/tvshows:/tv
+#       - ./data/downloads:/downloads
+#     ports:
+#       - 8989:8989
 
-  sonarr:
-    image: lscr.io/linuxserver/sonarr:latest
-    container_name: sonarr
-    restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
-    volumes:
-      - ./config/sonarr:/config
-      - ./data/tvshows:/tv
-      - ./data/downloads:/downloads
-    ports:
-      - 8989:8989
+#   qbittorrent:
+#     image: lscr.io/linuxserver/qbittorrent:latest
+#     container_name: qbittorrent
+#     restart: unless-stopped
+#     ports:
+#       - 8080:8080
+#       - 6881:6881
+#       - 6881:6881/udp
+#     volumes:
+#       - ./config/qbittorrent:/config
+#       - ./data/downloads:/downloads
 
-  qbittorrent:
-    image: lscr.io/linuxserver/qbittorrent:latest
-    container_name: qbittorrent
-    restart: unless-stopped
-    ports:
-      - 8080:8080
-      - 6881:6881
-      - 6881:6881/udp
-    volumes:
-      - ./config/qbittorrent:/config
-      - ./data/downloads:/downloads
-
-networks:
-  secure-pipe:
-    driver: bridge
-    driver_opts:
-      com.docker.network.driver.mtu: 1400
-    ipam:
-      config:
-        - subnet: 192.168.90.0/24
+# networks:
+#   secure-pipe:
+#     driver: bridge
+#     driver_opts:
+#       com.docker.network.driver.mtu: 1400
+#     ipam:
+#       config:
+#         - subnet: 192.168.90.0/24
