@@ -1,29 +1,30 @@
 services:
-  dns-resolver:
-    image: cloudflare/cloudflared:latest
-    container_name: cloudflared_dns
-    networks:
-      secure-pipe:
-        ipv4_address: 192.168.90.53
-    command: proxy-dns --address 0.0.0.0 --port 53 --upstream https://1.1.1.1/dns-query --upstream https://1.0.0.1/dns-query
+  vpn:
+    image: qmcgaw/gluetun
+    container_name: vpn
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - VPN_SERVICE_PROVIDER=protonvpn
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=UMHuhAFMIhF7duQw7chXzpWxZ7gFX/fp1yJ2H9g7MFE=
+      - WIREGUARD_ADDRESSES=10.2.0.2/32
+      - SERVER_COUNTRIES=Netherlands
+    ports:
+      - 9696:9696
     restart: unless-stopped
 
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
-    restart: unless-stopped
-    dns:
-      - 192.168.90.53
-    networks:
-      - secure-pipe
-    sysctls:
-      - net.ipv6.conf.all.disable_ipv6=1
-    ports:
-      - 9696:9696
+    network_mode: "service:vpn"
     depends_on:
-      - dns-resolver
+      - vpn
     volumes:
       - ./config/prowlarr:/config
+    restart: unless-stopped
 
   unmanic:
     image: josh5/unmanic:latest
