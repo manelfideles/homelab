@@ -8,14 +8,12 @@ services:
       - /dev/net/tun:/dev/net/tun
     environment:
       - VPN_SERVICE_PROVIDER=protonvpn
-      - VPN_TYPE=wireguard
-      - WIREGUARD_PRIVATE_KEY=UMHuhAFMIhF7duQw7chXzpWxZ7gFX/fp1yJ2H9g7MFE=
-      - WIREGUARD_ADDRESSES=10.2.0.2/32
+      - VPN_TYPE=openvpn
+      - OPENVPN_PROTOCOL=tcp
+      - OPENVPN_ENDPOINT_PORT=443
+      - OPENVPN_USER=${OPENVPN_USER}
+      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
       - SERVER_COUNTRIES=Netherlands
-      - DNS_SERVER=1.1.1.1
-      - DNS_KEEP_NAMESERVER=on
-      - HTTPPROXY=off
-      - SHADOWSOCKS=off
     ports:
       - 9696:9696
     restart: unless-stopped
